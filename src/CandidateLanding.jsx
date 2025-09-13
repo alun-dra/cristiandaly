@@ -51,15 +51,14 @@ export default function CandidateLanding() {
     }
 
     if (bioRef.current) {
-      const img = bioRef.current.querySelector("img");
-      if (img) {
-        gsap.to(img, {
-          scrollTrigger: { trigger: bioRef.current, start: "top 80%", scrub: true },
-          yPercent: -6,
-          scale: 1.02,
-        });
-      }
-    }
+  const container = bioRef.current.querySelector(".bio-img-container");
+  gsap.to(container, {
+    scrollTrigger: { trigger: bioRef.current, start: "top 80%", scrub: true },
+    yPercent: -6,
+    scale: 1.02,
+  });
+}
+
   }, []);
 
   const proposals = [
@@ -312,16 +311,19 @@ export default function CandidateLanding() {
           <div className="lg:col-span-7">
             <div
               className="relative rounded-[2rem] overflow-hidden border border-neutral-200 shadow-sm
-                         aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] xl:aspect-[16/10] max-h-[560px] mx-auto"
+                        aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] xl:aspect-[4/5] max-h-[560px] mx-auto bg-white"
             >
               <img
                 src={portrait}
                 alt="Retrato del candidato"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: "center 15%" }}
+                style={{ objectPosition: "center 30%" }}  // bajamos el encuadre para ver más abajo
               />
             </div>
           </div>
+
+
+
         </div>
       </section>
 
