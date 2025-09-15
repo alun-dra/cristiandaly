@@ -1,18 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  ArrowRight, ShieldAlert, Landmark, Building2, Hammer,
-  Gavel, Lock, ArrowUpRight, Send, Info, Sprout
+  ArrowRight, ShieldAlert, Building2, Hammer,
+  Gavel, Lock, ArrowUpRight, Send, Info, Sprout,
+  Instagram, Twitter, ExternalLink, FileDown
 } from "lucide-react";
+import TikTokIcon from "./TikTokIcon";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import portrait from "./assets/cristiandaly.jfif";
-import { ExternalLink } from "lucide-react";
+
+// 👇 nuevo: fondo animado como componente
+import HeroBackground from "./components/HeroBackground";
+import ContactSection from "./components/ContactSection";
 
 // Paleta (profesional, fondo blanco) basada en los colores del PNL
 const COLORS = {
-  ink: "#1B191A",   // texto principal
-  navy: "#182D56",  // titulares
-  amber: "#FBA931", // acento
+  ink: "#1B191A",
+  navy: "#182D56",
+  amber: "#FBA931",
   gray: "#E5E5E5",
   white: "#FFFFFF",
 };
@@ -22,6 +27,10 @@ export default function CandidateLanding() {
   const heroRef = useRef(null);
   const gridRef = useRef(null);
   const bioRef = useRef(null);
+  const socialRef = useRef(null);
+
+  const [openProposal, setOpenProposal] = useState(null);
+  const toggleProposal = (id) => setOpenProposal((cur) => (cur === id ? null : id));
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -29,7 +38,6 @@ export default function CandidateLanding() {
     const fadeIn = (root) => {
       const nodes = root?.querySelectorAll("[data-fade]");
       if (!nodes?.length) return;
-      // Importante: mantenemos opacity:1 siempre
       gsap.fromTo(
         nodes,
         { y: 12, opacity: 1 },
@@ -39,6 +47,7 @@ export default function CandidateLanding() {
 
     fadeIn(navRef.current);
     fadeIn(heroRef.current);
+    fadeIn(socialRef.current);
 
     if (gridRef.current) {
       gsap.from(gridRef.current.querySelectorAll("[data-card]"), {
@@ -51,14 +60,13 @@ export default function CandidateLanding() {
     }
 
     if (bioRef.current) {
-  const container = bioRef.current.querySelector(".bio-img-container");
-  gsap.to(container, {
-    scrollTrigger: { trigger: bioRef.current, start: "top 80%", scrub: true },
-    yPercent: -6,
-    scale: 1.02,
-  });
-}
-
+      const container = bioRef.current.querySelector(".bio-img-container");
+      gsap.to(container, {
+        scrollTrigger: { trigger: bioRef.current, start: "top 80%", scrub: true },
+        yPercent: -6,
+        scale: 1.02,
+      });
+    }
   }, []);
 
   const proposals = [
@@ -70,6 +78,10 @@ export default function CandidateLanding() {
         "Endurecer la legislación migratoria para deportar de inmediato a inmigrantes ilegales.",
         "Priorizar la seguridad de las familias chilenas: sin orden no hay libertad.",
       ],
+      details:
+        "Impulsaremos estándares de aislamiento por peligrosidad, bloqueo efectivo de señal, control biométrico, talleres obligatorios de reinserción y coordinación con Fiscalía para cortar las cadenas de mando al interior.",
+      pdf: "/propuestas/p2.pdf",
+      url: "/propuestas/2",
       icon: <ShieldAlert className="w-6 h-6" />,
     },
     {
@@ -80,6 +92,10 @@ export default function CandidateLanding() {
         "Silencio administrativo positivo: si el Estado no responde, se aprueba.",
         "La burocracia no puede frenar la innovación y el empleo.",
       ],
+      details:
+        "Plazos máximos por tipología de permiso, plataforma única con trazabilidad pública y responsabilidad administrativa por incumplimiento de plazos.",
+      pdf: "/propuestas/p3.pdf",
+      url: "/propuestas/3",
       icon: <Building2 className="w-6 h-6" />,
     },
     {
@@ -90,6 +106,10 @@ export default function CandidateLanding() {
         "Ventanilla única con supervisión técnica, no ideológica.",
         "Chile necesita crecer y generar empleo.",
       ],
+      details:
+        "Modernizamos el SEIA para proyectos estratégicos con evaluaciones técnicas independientes, participación temprana y certezas jurídicas.",
+      pdf: "/propuestas/p4.pdf",
+      url: "/propuestas/4",
       icon: <Sprout className="w-6 h-6" />,
     },
     {
@@ -100,6 +120,10 @@ export default function CandidateLanding() {
         "Recorte de asesores, reparticiones innecesarias y privilegios.",
         "Menos Estado, menos despilfarro.",
       ],
+      details:
+        "Plan de racionalización con metas de ahorro plurianuales auditables por Contraloría y publicación de todos los gastos en formato abierto.",
+      pdf: "/propuestas/p5.pdf",
+      url: "/propuestas/5", // ✅ corregido
       icon: <Hammer className="w-6 h-6" />,
     },
     {
@@ -110,42 +134,23 @@ export default function CandidateLanding() {
         "Penas más duras para reincidentes y segregación por peligrosidad.",
         "Recuperar la paz en las calles.",
       ],
+      details:
+        "Modelo 'ventanas rotas': persecución a delitos menores reiterados, control de armas y trabajo coordinado con municipios para prevención situacional.",
+      pdf: "/propuestas/p6.pdf",
+      url: "/propuestas/6",
       icon: <Lock className="w-6 h-6" />,
     },
   ];
 
   return (
     <div className="min-h-screen bg-white text-[15px] leading-relaxed" style={{ color: COLORS.ink }}>
-      {/* NAV */}
-      <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3" data-fade>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: COLORS.navy }}>
-              <Landmark className="text-white" />
-            </div>
-            <span className="font-semibold tracking-wide" style={{ color: COLORS.navy }}>
-              Cristián Daly — Diputado
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-sm" ref={navRef}>
-            <a href="#propuesta1" className="hover:text-neutral-900" data-fade>Contribuciones</a>
-            <a href="#propuestas" className="hover:text-neutral-900" data-fade>Programa</a>
-            <a href="#bio" className="hover:text-neutral-900" data-fade>Biografía</a>
-            <a
-              href="#contacto"
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-white"
-              style={{ background: COLORS.navy }}
-              data-fade
-            >
-              Súmate <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </nav>
-
       {/* HERO */}
-      <header ref={heroRef} className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 pt-14 pb-16 grid md:grid-cols-12 gap-10 items-center">
+      <header ref={heroRef} className="relative bg-white">
+        {/* 👇 Fondo animado (no capta eventos y queda detrás) */}
+        <HeroBackground COLORS={COLORS} />
+
+        {/* Contenido del hero */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-14 pb-16 grid md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7">
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight" style={{ color: COLORS.navy }} data-fade>
               Orden, libertad y crecimiento para Chile
@@ -153,6 +158,7 @@ export default function CandidateLanding() {
             <p className="mt-4 text-neutral-600 text-lg md:text-xl max-w-2xl" data-fade>
               Soy <span className="font-semibold" style={{ color: COLORS.navy }}>Cristián Daly Dagorret</span>. Voy a luchar contra el Estado lento y abusivo, por un Chile seguro, que premie a los que emprenden y trabajan.
             </p>
+
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
                 href="#propuesta1"
@@ -172,6 +178,7 @@ export default function CandidateLanding() {
                 Ver programa completo
                 <Gavel className="w-5 h-5" />
               </a>
+
               <a
                 href="https://shorturl.at/du0sy"
                 target="_blank"
@@ -183,7 +190,6 @@ export default function CandidateLanding() {
                 Donaciones
                 <ExternalLink className="w-5 h-5" />
               </a>
-
             </div>
           </div>
 
@@ -236,6 +242,7 @@ export default function CandidateLanding() {
               </a>
             </div>
           </div>
+
           <div className="lg:col-span-5">
             <div className="rounded-3xl overflow-hidden border border-neutral-200 bg-white shadow-sm">
               <div className="p-6 md:p-8">
@@ -258,20 +265,43 @@ export default function CandidateLanding() {
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-5xl font-extrabold" style={{ color: COLORS.navy }}>Programa</h2>
           <p className="mt-3 text-neutral-700 max-w-3xl">Un plan claro para recuperar el orden, liberar el emprendimiento y reducir el tamaño del Estado.</p>
+
           <div ref={gridRef} className="mt-10 grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {proposals.map((p) => (
-              <article key={p.id} data-card className="group relative rounded-2xl border border-neutral-200 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="p-6">
+              <article key={p.id} data-card className="group relative rounded-2xl border border-neutral-200 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow h-full">
+                <div className="p-6 flex flex-col h-full">
                   <div className="flex items-center gap-3" style={{ color: COLORS.navy }}>
                     {p.icon}
                     <span className="text-sm uppercase tracking-wider">Propuesta {p.id}</span>
                   </div>
+
                   <h3 className="mt-2 text-xl font-bold leading-snug" style={{ color: COLORS.navy }}>{p.title}</h3>
+
                   <ul className="mt-4 space-y-2 text-neutral-800">
                     {p.bullets.map((b, i) => (
-                      <li key={i} className="flex gap-3"><span style={{ color: COLORS.amber }}>•</span><span>{b}</span></li>
+                      <li key={i} className="flex gap-3">
+                        <span style={{ color: COLORS.amber }}>•</span>
+                        <span>{b}</span>
+                      </li>
                     ))}
                   </ul>
+
+                  <div className="mt-auto pt-6 flex items-center gap-3">
+                    <a href={p.url} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-300 hover:bg-neutral-50 transition">
+                      Ver más <ArrowRight className="w-4 h-4" />
+                    </a>
+
+                    <a
+                      href={p.pdf}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white"
+                      style={{ background: COLORS.navy }}
+                    >
+                      Descargar PDF <FileDown className="w-4 h-4" />
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
@@ -282,19 +312,12 @@ export default function CandidateLanding() {
       {/* BIO */}
       <section id="bio" ref={bioRef} className="py-16 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-12 gap-10 items-center">
-          {/* Texto */}
           <div className="lg:col-span-5 order-last lg:order-first flex flex-col justify-center">
             <span className="uppercase tracking-widest text-xs" style={{ color: COLORS.navy }}>Biografía</span>
             <h2 className="mt-2 text-3xl md:text-5xl font-extrabold" style={{ color: COLORS.navy }}>Cristián Daly Dagorret</h2>
-            <p className="mt-4 text-neutral-700 text-lg">
-              Soy Cristián Daly Dagorret, periodista de profesión y apasionado por el servicio público. Durante 8 años fui concejal en Lo Barnechea, lo que me permitió conocer desde dentro cómo funciona el Estado, sus virtudes pero también sus enormes falencias. Esa experiencia me dio la convicción de que Chile necesita un cambio profundo y valiente.
-            </p>
-            <p className="mt-4 text-neutral-700">
-              Soy deportista, disfruto de los cerros en bicicleta y corriendo, porque creo en la disciplina y la perseverancia como formas de vida. Junto a mi señora formamos una familia con nuestra hija y esperamos a una segunda que llegará poco después de la elección. Ellas son mi motor y la razón principal de esta lucha.
-            </p>
-            <p className="mt-4 text-neutral-700">
-              Como diputado quiero llevar la voz de quienes están cansados de un Estado lento, abusivo y capturado por la ideología. Creo en un Estado pequeño, eficiente y barato, que esté realmente al servicio de las personas. Mi compromiso es luchar con fuerza en la batalla cultural contra el wokismo, y al mismo tiempo impulsar políticas que brinden seguridad a las familias, porque sin orden y tranquilidad no hay libertad ni futuro.
-            </p>
+            <p className="mt-4 text-neutral-700 text-lg">Soy Cristián Daly Dagorret, periodista de profesión y apasionado por el servicio público. Durante 8 años fui concejal en Lo Barnechea, lo que me permitió conocer desde dentro cómo funciona el Estado, sus virtudes pero también sus enormes falencias. Esa experiencia me dio la convicción de que Chile necesita un cambio profundo y valiente.</p>
+            <p className="mt-4 text-neutral-700">Soy deportista, disfruto de los cerros en bicicleta y corriendo, porque creo en la disciplina y la perseverancia como formas de vida. Junto a mi señora formamos una familia con nuestra hija y esperamos a una segunda que llegará poco después de la elección. Ellas son mi motor y la razón principal de esta lucha.</p>
+            <p className="mt-4 text-neutral-700">Como diputado quiero llevar la voz de quienes están cansados de un Estado lento, abusivo y capturado por la ideología. Creo en un Estado pequeño, eficiente y barato, que esté realmente al servicio de las personas. Mi compromiso es luchar con fuerza en la batalla cultural contra el wokismo, y al mismo tiempo impulsar políticas que brinden seguridad a las familias, porque sin orden y tranquilidad no hay libertad ni futuro.</p>
             <div className="mt-6 grid grid-cols-2 gap-4 max-w-md">
               <div className="rounded-xl border border-neutral-200 p-4 bg-white">
                 <span className="text-2xl font-bold" style={{ color: COLORS.navy }}>8</span>
@@ -307,59 +330,62 @@ export default function CandidateLanding() {
             </div>
           </div>
 
-          {/* Imagen */}
           <div className="lg:col-span-7">
-            <div
-              className="relative rounded-[2rem] overflow-hidden border border-neutral-200 shadow-sm
-                        aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] xl:aspect-[4/5] max-h-[560px] mx-auto bg-white"
-            >
-              <img
-                src={portrait}
-                alt="Retrato del candidato"
-                className="w-full h-full object-cover"
-                style={{ objectPosition: "center 30%" }}  // bajamos el encuadre para ver más abajo
-              />
+            <div className="bio-img-container relative rounded-[2rem] overflow-hidden border border-neutral-200 shadow-sm aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] xl:aspect-[4/5] max-h-[560px] mx-auto bg-white">
+              <img src={portrait} alt="Retrato del candidato" className="w-full h-full object-cover" style={{ objectPosition: "center 30%" }} />
             </div>
           </div>
-
-
-
         </div>
       </section>
 
-      {/* CONTACTO */}
-      <section id="contacto" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-extrabold" style={{ color: COLORS.navy }}>¿Te sumas?</h2>
-            <p className="mt-3 text-neutral-700 max-w-xl">
-              Inscríbete para ser apoderado, voluntario o simplemente mantenerte informado del avance legislativo y actividades de campaña.
-            </p>
+      {/* REDES SOCIALES */}
+      <section id="redes" ref={socialRef} className="py-10">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-extrabold" style={{ color: COLORS.navy }} data-fade>Redes sociales</h2>
+          <p className="mt-2 text-neutral-600" data-fade>Sígueme para conocer propuestas, actividades y novedades de campaña.</p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="https://instagram.com/cristiandaly"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"
+              aria-label="Abrir Instagram de Cristián Daly (se abre en una pestaña nueva)"
+              data-fade
+            >
+              <Instagram className="w-5 h-5" />
+              <span className="font-medium">Instagram</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+
+            <a
+              href="https://tiktok.com/@cristiandaly"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"
+              aria-label="Abrir TikTok de Cristián Daly (se abre en una pestaña nueva)"
+              data-fade
+            >
+              <TikTokIcon className="w-5 h-5" />
+              <span className="font-medium">TikTok</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+
+            <a
+              href="https://x.com/cristiandaly"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"
+              aria-label="Abrir perfil en X de Cristián Daly (se abre en una pestaña nueva)"
+              data-fade
+            >
+              <Twitter className="w-5 h-5" />
+              <span className="font-medium">X</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
-          <form className="bg-white rounded-2xl p-6 border border-neutral-200 grid grid-cols-1 gap-4 shadow-sm">
-            <input className="px-4 py-3 rounded-xl bg-white border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#182D56]/30" placeholder="Nombre" />
-            <input type="email" className="px-4 py-3 rounded-xl bg-white border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#182D56]/30" placeholder="Email" />
-            <input className="px-4 py-3 rounded-xl bg-white border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#182D56]/30" placeholder="Comuna" />
-            <button type="button" className="mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-semibold text-white" style={{ background: COLORS.navy }}>
-              Enviar interés <ArrowUpRight className="w-5 h-5" />
-            </button>
-          </form>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="py-10 border-t border-neutral-200 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-4 items-center justify-between text-sm text-neutral-600">
-          <div className="flex items-center gap-3">
-            <Landmark className="w-4 h-4" /> Partido Nacional Libertario · Identidad azul/ámbar
-          </div>
-          <div className="flex items-center gap-4">
-            <a className="hover:text-neutral-900" href="#propuesta1">Contribuciones</a>
-            <a className="hover:text-neutral-900" href="#propuestas">Programa</a>
-            <a className="hover:text-neutral-900" href="#bio">Biografía</a>
-          </div>
-        </div>
-      </footer>
+      <ContactSection COLORS={COLORS} />
+
     </div>
   );
 }
