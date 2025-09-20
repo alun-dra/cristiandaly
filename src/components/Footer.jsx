@@ -6,17 +6,16 @@ const COLORS = {
 
 export default function Footer() {
   return (
-    <footer className="py-6 border-t border-neutral-200 bg-neutral-50">
+    <footer className="py-6 border-t bg-white border-neutral-200 ">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Logo + texto */}
-        <div className="flex items-center gap-2">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: COLORS.navy }}
-          >
-            <Landmark className="text-white w-4 h-4" />
-          </div>
+        <div className="flex items-center gap-3">
+          <img
+            src="/logo.jpg"
+            alt="Logo Partido Nacional Libertario"
+            className="w-9 h-9 object-contain"
+          />
           <span className="text-sm font-medium text-neutral-700">
             Partido Nacional Libertario
           </span>

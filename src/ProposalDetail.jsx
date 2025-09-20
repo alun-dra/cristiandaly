@@ -1,5 +1,7 @@
 // src/ProposalDetail.jsx
 import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { setMeta } from "./seo/setMeta";
 import {
   FileDown,
   ArrowLeft,
@@ -17,6 +19,28 @@ export default function ProposalDetail() {
     proposalsData.find((p) => String(p.id) === id) ||
     proposalsData.find((p) => p.slug === id);
 
+  // SEO dinámico (solo si hay propuesta)
+  useEffect(() => {
+    if (!proposal) return;
+
+    const base = "https://cristiandaly.cl";
+    const path = proposal.slug ? `/propuestas/${proposal.slug}` : `/propuestas/${proposal.id}`;
+    const canonical = `${base}${path}`;
+
+    const ogImage =
+      (proposal.images && proposal.images[0]) ||
+      `${base}/og/daly-cover.jpg`;
+
+    setMeta({
+      title: `${proposal.title} — Cristián Daly`,
+      description:
+        proposal.intro ||
+        "Detalle de propuesta del programa de Cristián Daly.",
+      canonical,
+      image: ogImage,
+    });
+  }, [proposal]);
+
   if (!proposal) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-16">
@@ -31,11 +55,11 @@ export default function ProposalDetail() {
   const color = proposal.color || "#182D56"; // fallback
   const accent = proposal.accent || "#FBA931";
 
-  // Campos opcionales (puedes agregarlos en proposalsData si quieres)
-  const videoId = proposal.videoId; // p.ej. "M7lc1UVf-VE"
-  const images = proposal.images || []; // p.ej. ["/src/assets/p2-1.jpg", "..."]
+  // Campos opcionales
+  const videoId = proposal.videoId; // ej: "M7lc1UVf-VE"
+  const images = proposal.images || [];
 
-  // Helpers
+  // Helpers compartir
   const shareUrl =
     typeof window !== "undefined" ? window.location.href : "https://";
   const titleForShare = proposal.title;
@@ -53,13 +77,12 @@ export default function ProposalDetail() {
         alert("Enlace copiado al portapapeles ✅");
       }
     } catch {
-      // usuario canceló o no soportado
+      // cancelado/no soportado
     }
   };
 
   return (
     <main className="bg-white">
-        
       {/* HERO */}
       <header
         className="border-b border-neutral-200"
@@ -142,7 +165,7 @@ export default function ProposalDetail() {
 
             {/* Cuerpo / desarrollo */}
             {proposal.body?.length > 0 && (
-              <div className={`mt-6 space-y-4 text-neutral-800`}>
+              <div className="mt-6 space-y-4 text-neutral-800">
                 {proposal.body.map((par, i) => (
                   <p key={i}>{par}</p>
                 ))}
@@ -244,14 +267,14 @@ export default function ProposalDetail() {
                 </div>
               </div>
 
-              {/* Redes sociales */}
+              {/* Redes sociales (handles unificados) */}
               <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm p-6">
                 <h3 className="text-lg font-semibold" style={{ color }}>
                   Redes sociales
                 </h3>
                 <div className="mt-4 flex flex-col gap-3">
                   <a
-                    href="https://instagram.com/cristiandaly"
+                    href="https://www.instagram.com/dalylibertario/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-between gap-3 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"
@@ -264,7 +287,7 @@ export default function ProposalDetail() {
                   </a>
 
                   <a
-                    href="https://tiktok.com/@cristiandaly"
+                    href="https://www.tiktok.com/@dalylibertario"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-between gap-3 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"
@@ -277,7 +300,7 @@ export default function ProposalDetail() {
                   </a>
 
                   <a
-                    href="https://x.com/cristiandaly"
+                    href="https://x.com/cristiandalyd"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-between gap-3 px-4 py-2 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 transition shadow-sm"

@@ -8,6 +8,7 @@ import TikTokIcon from "./TikTokIcon";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import portrait from "./assets/cristiandaly.jfif";
+import { setMeta } from "./seo/setMeta";
 
 // 👇 nuevo: fondo animado como componente
 import HeroBackground from "./components/HeroBackground";
@@ -48,7 +49,22 @@ export default function CandidateLanding() {
   const toggleProposal = (id) => setOpenProposal((cur) => (cur === id ? null : id));
 
   useEffect(() => {
+
+
+    setMeta({
+      title: "Cristián Daly — Diputado | Orden, libertad y crecimiento",
+      description:
+        "Conoce el programa de Cristián Daly: seguridad, anti-burocracia, reducir el gasto político y eliminar el 100% de las contribuciones.",
+      canonical: "https://cristiandaly.cl/",
+      image: "https://cristiandaly.cl/og/daly-cover.jpg",
+    });
+
+
     gsap.registerPlugin(ScrollTrigger);
+
+
+
+
 
     const fadeIn = (root) => {
       const nodes = root?.querySelectorAll("[data-fade]");
@@ -232,7 +248,6 @@ export default function CandidateLanding() {
         </div>
       </header>
 
-   
       {/* BIO ( */}
       <section
         id="bio"
@@ -322,9 +337,6 @@ export default function CandidateLanding() {
         </div>
       </section>
 
-
-
-      {/* PROPUESTA #1 */}
       {/* PROPUESTA #1 (compactada, sin vacío a la derecha) */}
       <section id="propuesta1" className="py-16 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-12 gap-10 items-start">
@@ -484,8 +496,6 @@ export default function CandidateLanding() {
         </div>
       </section>
 
-
-
       {/* OTRAS PROPUESTAS */}
       <section id="propuestas" className="py-16">
         <div className="max-w-7xl mx-auto px-4">
@@ -537,7 +547,6 @@ export default function CandidateLanding() {
 
       
 
-      
       {/* REDES SOCIALES ) */}
       <section id="redes" ref={socialRef} className="py-0">
         {/* Franja sólida */}
@@ -634,7 +643,6 @@ export default function CandidateLanding() {
           </div>
         </div>
       </section>
-
 
 
       <ContactSection COLORS={COLORS} />
