@@ -397,7 +397,7 @@ export default function CandidateLanding() {
               Ver otras propuestas <ArrowRight className="w-5 h-5" />
             </a>
             <a
-              href="#contacto"
+              href="https://chaocontribuciones.cl/"
               className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-white shadow-sm hover:shadow transition"
               style={{ background: COLORS.navy }}
             >

@@ -1,5 +1,4 @@
-// src/components/ContactSection.jsx
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Phone } from "lucide-react";
 
 export default function ContactSection({ COLORS }) {
   return (
@@ -21,6 +20,25 @@ export default function ContactSection({ COLORS }) {
               Inscríbete para ser apoderado, voluntario o simplemente
               mantenerte informado del avance legislativo y actividades de campaña.
             </p>
+
+            {/* Título y números de contacto */}
+            <div className="mt-8">
+              <h3 className="text-xl font-bold text-white mb-4">Números de contacto</h3>
+              <div className="space-y-3 text-lg font-semibold text-white">
+                <a
+                  href="tel:+56233433887"
+                  className="flex items-center gap-2 hover:text-amber-300 transition"
+                >
+                  <Phone className="w-5 h-5" /> (+56) 23 3433887
+                </a>
+                <a
+                  href="tel:+56939590157"
+                  className="flex items-center gap-2 hover:text-amber-300 transition"
+                >
+                  <Phone className="w-5 h-5" /> (+56) 939590157
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -72,19 +90,14 @@ export default function ContactSection({ COLORS }) {
 
           {/* Campos ocultos de configuración FormSubmit */}
           <input type="hidden" name="_subject" value="Nuevo interés desde el sitio — Cristián Daly" />
-          {/* Cambia la URL de gracias si quieres mantener en la misma página */}
           <input type="hidden" name="_next" value="https://cristiandaly.cl/gracias" />
-          {/* Plantilla en tabla bonita */}
           <input type="hidden" name="_template" value="table" />
-          {/* Desactiva captcha (si prefieres activarlo, elimina esta línea) */}
           <input type="hidden" name="_captcha" value="false" />
-          {/* Autorespuesta al usuario */}
           <input
             type="hidden"
             name="_autoresponse"
             value="¡Gracias por sumarte! Te contactaremos pronto."
           />
-          {/* Honeypot anti-bot (no lo toques) */}
           <input type="text" name="_honey" className="hidden" tabIndex="-1" autoComplete="off" />
 
           <button

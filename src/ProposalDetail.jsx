@@ -14,28 +14,21 @@ import TikTokIcon from "./TikTokIcon";
 import { proposalsData } from "./data/proposalsData";
 
 export default function ProposalDetail() {
-  const { id } = useParams(); // admite id numérico o slug
+  const { id } = useParams();
   const proposal =
     proposalsData.find((p) => String(p.id) === id) ||
     proposalsData.find((p) => p.slug === id);
 
-  // SEO dinámico (solo si hay propuesta)
   useEffect(() => {
     if (!proposal) return;
-
     const base = "https://cristiandaly.cl";
     const path = proposal.slug ? `/propuestas/${proposal.slug}` : `/propuestas/${proposal.id}`;
     const canonical = `${base}${path}`;
-
-    const ogImage =
-      (proposal.images && proposal.images[0]) ||
-      `${base}/og/daly-cover.jpg`;
+    const ogImage = (proposal.images && proposal.images[0]) || `${base}/og/daly-cover.jpg`;
 
     setMeta({
       title: `${proposal.title} — Cristián Daly`,
-      description:
-        proposal.intro ||
-        "Detalle de propuesta del programa de Cristián Daly.",
+      description: proposal.intro || "Detalle de propuesta del programa de Cristián Daly.",
       canonical,
       image: ogImage,
     });
@@ -43,7 +36,7 @@ export default function ProposalDetail() {
 
   if (!proposal) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto px-4 py-16">
         <h1 className="text-2xl font-bold">Propuesta no encontrada</h1>
         <Link to="/" className="inline-flex items-center gap-2 mt-6 text-blue-700">
           <ArrowLeft className="w-4 h-4" /> Volver al inicio
@@ -52,16 +45,14 @@ export default function ProposalDetail() {
     );
   }
 
-  const color = proposal.color || "#182D56"; // fallback
+  const color = proposal.color || "#182D56";
   const accent = proposal.accent || "#FBA931";
+  const chipBg = `${color}14`;
 
-  // Campos opcionales
-  const videoId = proposal.videoId; // ej: "M7lc1UVf-VE"
+  const videoId = proposal.videoId;
   const images = proposal.images || [];
 
-  // Helpers compartir
-  const shareUrl =
-    typeof window !== "undefined" ? window.location.href : "https://";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://";
   const titleForShare = proposal.title;
 
   const handleShare = async () => {
@@ -76,9 +67,7 @@ export default function ProposalDetail() {
         await navigator.clipboard.writeText(shareUrl);
         alert("Enlace copiado al portapapeles ✅");
       }
-    } catch {
-      // cancelado/no soportado
-    }
+    } catch {}
   };
 
   return (
@@ -91,39 +80,45 @@ export default function ProposalDetail() {
             "linear-gradient(180deg, rgba(246,247,251,0.5) 0%, rgba(255,255,255,1) 100%)",
         }}
       >
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
-          >
-            <ArrowLeft className="w-4 h-4" /> Volver al programa
-          </Link>
+        {/* usa el MISMO contenedor que el resto del sitio */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex items-center gap-3 flex-wrap">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="leading-none">Volver al programa</span>
+            </Link>
 
-          <div
-            className="mt-4 inline-flex items-center gap-3 text-xs md:text-sm uppercase tracking-wider px-3 py-1.5 rounded-full"
-            style={{ color, border: `1px solid ${color}` }}
-          >
-            {proposal.icon}
-            <span>Propuesta {proposal.id}</span>
+            <span
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] md:text-xs font-semibold uppercase tracking-wide leading-none"
+              style={{ color, border: `1px solid ${color}`, background: chipBg }}
+            >
+              {proposal.icon}
+              <span>Propuesta {proposal.id}</span>
+            </span>
           </div>
 
           <h1
-            className="mt-3 text-3xl md:text-5xl font-extrabold leading-tight"
+            className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight"
             style={{ color }}
           >
             {proposal.title}
           </h1>
 
           {proposal.intro && (
-            <p className="mt-4 text-neutral-700 text-lg">{proposal.intro}</p>
+            <p className="mt-3 md:mt-4 text-neutral-700 text-lg md:text-xl max-w-3xl">
+              {proposal.intro}
+            </p>
           )}
 
           {proposal.bullets?.length > 0 && (
-            <ul className="mt-5 space-y-2 text-neutral-800">
+            <ul className="mt-5 space-y-2 text-neutral-800 max-w-3xl">
               {proposal.bullets.map((b, i) => (
                 <li key={i} className="flex gap-3">
                   <span
-                    className="mt-2 w-2 h-2 rounded-full"
+                    className="mt-2 w-2 h-2 rounded-full shrink-0"
                     style={{ background: accent }}
                   />
                   <span>{b}</span>
@@ -136,10 +131,10 @@ export default function ProposalDetail() {
 
       {/* CONTENIDO + SIDEBAR */}
       <section className="py-10">
-        <div className="max-w-5xl mx-auto px-4 grid lg:grid-cols-12 gap-8 items-start">
-          {/* Columna principal */}
+        {/* mismo contenedor */}
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-12 gap-8 items-start">
+          {/* principal */}
           <article className="lg:col-span-8">
-            {/* Video opcional */}
             {videoId && (
               <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
                 <div className="px-5 py-4 border-b border-neutral-200 flex items-center justify-between">
@@ -163,7 +158,6 @@ export default function ProposalDetail() {
               </div>
             )}
 
-            {/* Cuerpo / desarrollo */}
             {proposal.body?.length > 0 && (
               <div className="mt-6 space-y-4 text-neutral-800">
                 {proposal.body.map((par, i) => (
@@ -172,7 +166,6 @@ export default function ProposalDetail() {
               </div>
             )}
 
-            {/* Galería opcional */}
             {images.length > 0 && (
               <div className="mt-6">
                 <h4
@@ -195,7 +188,6 @@ export default function ProposalDetail() {
               </div>
             )}
 
-            {/* CTA inferior */}
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={proposal.pdf}
@@ -224,10 +216,9 @@ export default function ProposalDetail() {
             </div>
           </article>
 
-          {/* Sidebar sticky */}
+          {/* Sidebar */}
           <aside className="lg:col-span-4">
             <div className="sticky top-24 space-y-6">
-              {/* Descargar */}
               <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm p-6">
                 <h3 className="text-lg font-semibold" style={{ color }}>
                   Descargas
@@ -247,7 +238,6 @@ export default function ProposalDetail() {
                 </a>
               </div>
 
-              {/* Compartir */}
               <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm p-6">
                 <h3 className="text-lg font-semibold" style={{ color }}>
                   Comparte
@@ -267,7 +257,6 @@ export default function ProposalDetail() {
                 </div>
               </div>
 
-              {/* Redes sociales (handles unificados) */}
               <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm p-6">
                 <h3 className="text-lg font-semibold" style={{ color }}>
                   Redes sociales
